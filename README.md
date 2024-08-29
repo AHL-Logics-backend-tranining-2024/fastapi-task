@@ -62,7 +62,7 @@ The Task Manager API Application is a FastAPI-based tool designed to help users 
   
   ```json
   {
-    "task_id": "integer", # please use a uuid
+    "task_id": "uuid_type", # please use a uuid
     "title": "string",
     "description": "string",
     "due_date": "YYYY-MM-DD",
@@ -76,7 +76,7 @@ The Task Manager API Application is a FastAPI-based tool designed to help users 
   
   ```json
   {
-    "task_id": "integer", # please use a uuid
+    "task_id": "uuid_type", # please use a uuid
     "title": "string",
     "description": "string",
     "due_date": "YYYY-MM-DD",
