@@ -27,7 +27,7 @@ def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Speci
 
 # Endpoint for retrieving uregent task
 @app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
-def get_urgent_tasks() -> List[Dict[str, Union[str, int]]]:
+def get_urgent_tasks():
     tasks = load_tasks()
     
     # Find urgent tasks by checking for the presence of 'priority'
@@ -37,7 +37,6 @@ def get_urgent_tasks() -> List[Dict[str, Union[str, int]]]:
         raise HTTPException(status_code=404, detail="No urgent tasks found")
     
     return urgent_tasks
-
 
 
 # Endpoint for retrieving task by ID
@@ -56,9 +55,9 @@ def get_task_by_id(
     raise HTTPException(status_code=404, detail="Task not found")
 
 
-
+# Create a task, specifying if it's urgent or normal based on provided data
 @app.post("/tasks/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
-def create_task_or_urgent_task(
+def create_task_or_urgent_task(  
     task: Task,
     priority: Optional[PriorityEnum] = Query(None, description="Specify the priority if the task is urgent")
 ):
@@ -83,3 +82,19 @@ def create_task_or_urgent_task(
     save_tasks(tasks)
     
     return task_dict
+
+
+
+@app.delete("/tasks/{task_id}",summary="Delete a Task by ID" , description="Delete a task by its ID.")
+def delete_task_by_id(task_id: UUID = Path(..., description="The ID of the task to delete")):
+    tasks = load_tasks()
+    
+    # Check if the task exists
+    if any(task.get("task_id") == str(task_id) for task in tasks):
+        # Remove the task with the matching ID
+        tasks = [task for task in tasks if task.get("task_id") != str(task_id)]
+        save_tasks(tasks)  # Save the updated task list
+        return {"detail": "Task deleted successfully"}
+    
+    # If task not found
+    raise HTTPException(status_code=404, detail="Task not found")
