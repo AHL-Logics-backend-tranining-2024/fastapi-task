@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 from fastapi import FastAPI, HTTPException, Path, Query
 from Model.Enum.enums import PriorityEnum, TaskTypeEnum
 from Model.task import Task
+from Model.urgentTask import UrgentTask
 from utils.task_storage import load_tasks, save_tasks
 
 
@@ -81,8 +82,7 @@ def create_task_or_urgent_task(
     tasks.append(task_dict)
     save_tasks(tasks)
     
-    return task_dict
-
+    return task_dict 
 
 
 @app.delete("/tasks/{task_id}",summary="Delete a Task by ID" , description="Delete a task by its ID.")
@@ -98,3 +98,47 @@ def delete_task_by_id(task_id: UUID = Path(..., description="The ID of the task 
     
     # If task not found
     raise HTTPException(status_code=404, detail="Task not found")
+
+
+@app.put("/tasks/{task_id}", summary="Update a task", description="Update a task by its ID.")
+def update_task_by_id(
+    *,
+    task_id: UUID = Path(..., description="The ID of the task to update"),
+    task: dict
+):
+    tasks = load_tasks()
+
+    # Find the index of the task with the given task_id
+    task_index = next((index for (index, t) in enumerate(tasks) if t.get("task_id") == str(task_id)), None)
+
+    if task_index is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    # Retrieve the original task
+    original_task = tasks[task_index]
+
+    # Convert task to dictionary for updates
+    updated_task = task
+
+    # Ensure priority can only be edited for urgent tasks
+    if 'priority' in updated_task:
+        if 'priority' in original_task:
+            # Update the priority if it's different from the original
+            if updated_task["priority"] != original_task["priority"]:
+                original_task["priority"] = updated_task["priority"]
+        else:
+            raise HTTPException(status_code=400, detail="Cannot set priority for a non-urgent task")
+     
+
+    # Update other fields only if they differ from the original
+    for key, value in updated_task.items():
+        if key != "task_id" and original_task.get(key) != value:
+            original_task[key] = value
+
+    # Save the updated tasks list
+    tasks[task_index] = original_task
+    save_tasks(tasks)
+
+
+    return {"message": "Task updated successfully", "task_id": str(task_id)}
+
