@@ -58,6 +58,7 @@ fastapi run
 ```
 
 5. **Access the API**
+
    Open your browser and go to `http://localhost:8000/docs` to view the interactive API documentation provided by FastAPI.
 
 ## Standup
