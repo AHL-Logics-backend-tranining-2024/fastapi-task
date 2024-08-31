@@ -2,11 +2,8 @@ from enum import Enum
 from pydantic import BaseModel, Field, constr, validator
 import re
 from typing import Literal
+from Model.Enum.enums import StatusEnum
 
-
-class StatusEnum(str, Enum):
-    inProgress = "InProgress"
-    completed = "Completed"
 
 class Task(BaseModel):
     title: str = constr(min_length=3, max_length=10) 
