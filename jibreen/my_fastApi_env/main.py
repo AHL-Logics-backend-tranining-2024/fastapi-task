@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Dict, List, Optional, Union
 from uuid import UUID, uuid4
 from fastapi import FastAPI, HTTPException, Path, Query
 from Model.Enum.enums import PriorityEnum, TaskTypeEnum
@@ -10,7 +10,7 @@ from utils.task_storage import load_tasks, save_tasks
 # Initialize the FastAPI application
 app = FastAPI()
 
-
+# Endpoint for retrieving all tasks or filtering tasks by type
 @app.get("/tasks/",summary="Get all tasks",description="Retrieve a list of all tasks with their details. You can specify if the task is urgent or normal using a query parameter.")
 def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Specify if the task is urgent or normal")):
     tasks = load_tasks()
@@ -24,6 +24,19 @@ def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Speci
     
     # Return all tasks if no type is specified
     return tasks
+
+# Endpoint for retrieving uregent task
+@app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
+def get_urgent_tasks() -> List[Dict[str, Union[str, int]]]:
+    tasks = load_tasks()
+    
+    # Find urgent tasks by checking for the presence of 'priority'
+    urgent_tasks = [task for task in tasks if "priority" in task]
+    
+    if not urgent_tasks:
+        raise HTTPException(status_code=404, detail="No urgent tasks found")
+    
+    return urgent_tasks
 
 
 
@@ -41,6 +54,7 @@ def get_task_by_id(
     
     # If task not found
     raise HTTPException(status_code=404, detail="Task not found")
+
 
 
 @app.post("/tasks/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
