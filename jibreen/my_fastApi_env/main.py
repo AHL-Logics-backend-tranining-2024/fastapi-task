@@ -139,5 +139,5 @@ def update_task_by_id(
     save_tasks(tasks)
 
 
-    return {"message": "Task updated successfully", "task_id": str(task_id)}
+    return {"message": "Task updated successfully", "original_task":original_task, "task_id": str(task_id)}
 
