@@ -2,19 +2,21 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from uuid import UUID, uuid4
 from datetime import date
+from enum import Enum       # Enum is defining a fixed set of values that a variable can take
+
 
 app = FastAPI()
 
-Status = {
-    "InProgress": "InProgress",
-    "Completed": "Completed"
-}
+# Using enum for status and priority
+class Status(Enum):
+    InProgress = "InProgress"
+    Completed = "Completed"
 
-Priority = {
-    "High": "High",
-    "Medium": "Medium",
-    "Low": "Low"
-}
+class Priority(Enum):
+    High = "High"
+    Medium = "Medium"
+    Low = "Low"
+
 
 # Task model
 class Task(BaseModel):
@@ -22,8 +24,10 @@ class Task(BaseModel):
     title: str                                   
     description: str                             
     due_date: date                            
-    status: str                              
+    status: Status                            
 
 # UrgentTask model inheriting from Task model
 class UrgentTask(Task):
-    priority: str  
+    priority: Priority
+
+ 
