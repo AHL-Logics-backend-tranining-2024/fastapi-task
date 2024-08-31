@@ -39,11 +39,12 @@ The Task Manager API Application is a FastAPI-based tool designed to help users 
   
   3. **Get All Tasks**
      - **Endpoint**: `/tasks/`
-     - **Description**: Retrieve a list of all tasks with their details.
+     - **Description**: Retrieve a list of all tasks with their details. You can specify if the task is urgent or 
+     normal using a query parameter to get only the tasks of that type.
   
   4. **Get Task by ID**
      - **Endpoint**: `/tasks/{task_id}/`
-     - **Description**: Retrieve the details of a task by its ID. You can specify if the task is urgent or normal using a query parameter.
+     - **Description**: Retrieve the details of a task by its ID.
   
   5. **Get Urgent Tasks**
      - **Endpoint**: `/tasks/urgent/`
