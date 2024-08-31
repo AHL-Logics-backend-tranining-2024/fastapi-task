@@ -15,7 +15,8 @@ This FastAPI project provides a task management system with endpoints for creati
 
 ## Data Models
 
--`Task`: Represents a general task with title, description, due date, and status. -`UrgentTask`: Inherits from Task and includes priority.
+- `Task`: Represents a general task with title, description, due date, and status.
+- `UrgentTask`: Inherits from Task and includes priority.
 
 ## Error Handling
 
@@ -31,7 +32,7 @@ This FastAPI project provides a task management system with endpoints for creati
 
 ### Installation
 
-1.** Clone the Repository**
+1. **Clone the Repository**
 
 ```
  git clone https://github.com/AHL-Logics-backend-tranining-2024/fastapi-task.git
