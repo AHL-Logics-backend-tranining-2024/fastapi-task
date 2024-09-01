@@ -71,10 +71,10 @@ This is a simple Task Management API built using FastAPI. The API allows you to 
 
     ```json
     {
-        "title": "Update the report",
-        "description": "Update the quarterly report for the finance department.",
-        "due_date": "2024-10-20T00:00:00",
-        "status": "completed",
+        "title": "Update the report", # Optional
+        "description": "Update the quarterly report for the finance department.", # Optional
+        "due_date": "2024-10-20T00:00:00", # Optional
+        "status": "completed",  # Optional
         "priority": "medium"  # Optional
     }
     ```
