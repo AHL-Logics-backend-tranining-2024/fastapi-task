@@ -7,12 +7,101 @@ Tasks can be categorized as normal or urgent based on their priority.
 
 ## EndPpints & Features
 
-- `POST /tasks` **Create a New Task:** Add a new task with details such as title, description, due date, status, and priority(urgent tasks).
-- `GET /tasks` **Retrieve All Tasks:** Get a list of all tasks, including both normal and urgent tasks.
-- `GET /tasks/urgent/` **Retrieve Urgent Tasks:** Get a list of all urgent tasks.
-- `GET /tasks/{task_id}` **Retrieve Task by ID:** Fetch the details of a specific task by its ID.
-- `PUT /tasks/{task_id}` **Update a Task by ID:** Modify the details of an existing task using its ID.
-- `DELETE /tasks/{task_id}` **Delete a Task by ID:** Remove a task from the system using its ID.
+- **Create a New Task:** Add a new task with details such as title, description, due date, status, and priority(urgent tasks).
+- **Retrieve All Tasks:** Get a list of all tasks, including both normal and urgent tasks.
+- **Retrieve Urgent Tasks:** Get a list of all urgent tasks.
+- **Retrieve Task by ID:** Fetch the details of a specific task by its ID.
+- **Update a Task by ID:** Modify the details of an existing task using its ID.
+- **Delete a Task by ID:** Remove a task from the system using its ID.
+
+
+## Endpoints
+
+### Create a New Task
+
+- **Endpoint:** `/tasks/`
+- **Method:** `POST`
+- **Description:** Create a new task. If a priority is set, the task is considered urgent.
+- **Request Body for Urgent Task:**
+    ```json
+    {
+        "title": "Task Title",
+        "description": "Task Description",
+        "due_date": "2024-09-01",
+        "status": "InProgress",
+        "priority": "High"
+    }
+    ```
+- **Request Body for Normal Task:**
+    ```json
+    {
+        "title": "Task Title",
+        "description": "Task Description",
+        "due_date": "2024-09-01",
+        "status": "InProgress",
+    }
+    ```
+
+### Retrieve All Tasks
+
+- **Endpoint:** `/tasks/`
+- **Method:** `GET`
+- **Description:** Retrieve a list of all tasks, including both normal and urgent tasks.
+
+### Retrieve Urgent Tasks
+
+- **Endpoint:** `/tasks/urgent/`
+- **Method:** `GET`
+- **Description:** Retrieve a list of all tasks marked as urgent.
+- **Response:**
+    ```json
+    {
+        "urgent_tasks": [
+            {
+                "task_id": "UUID",
+                "title": "Urgent Task Title",
+                "description": "Task Description",
+                "due_date": "2024-09-01",
+                "status": "InProgress",
+                "priority": "High"
+            }
+        ]
+    }
+    ```
+
+### Retrieve Task by ID
+
+- **Endpoint:** `/tasks/{task_id}/`
+- **Method:** `GET`
+- **Description:** Retrieve the details of a specific task by its ID.
+- **Parameters:**
+    - `task_id` (path): The UUID of the task to retrieve.
+
+### Update a Task by ID
+
+- **Endpoint:** `/tasks/{task_id}/`
+- **Method:** `PUT`
+- **Description:** Update the details of an existing task using its ID.
+- **Request Body:**
+    ```json
+    {
+        "task_id": "UUID",
+        "title": "Updated Task Title",
+        "description": "Updated Description",
+        "due_date": "2024-09-01",
+        "status": "Completed",
+        "priority": "Medium"
+    }
+    ```
+
+### Delete a Task by ID
+
+- **Endpoint:** `/tasks/{task_id}/`
+- **Method:** `DELETE`
+- **Description:** Delete a task by its ID.
+- **Parameters:**
+    - `task_id` (path): The UUID of the task to delete.
+
 
 
 ## Requirements
