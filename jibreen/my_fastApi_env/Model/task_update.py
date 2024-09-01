@@ -7,17 +7,17 @@ from datetime import date
 
 
 class TaskUpdate(BaseModel):
-    # Title of the task, must be a string with length between 3 and 10 characters
-    title: str = constr(min_length=3, max_length=10) 
+   # Title of the task, optional
+    title: Optional[str] = None
 
-    # Description of the task, must be a string with length between 5 and 100 characters
-    description: str = constr(min_length=5, max_length=100)
+    # Description of the task, optional
+    description: Optional[str] = None
 
-    # Due date of the task, must be a string in the format YYYY-MM-DD
-    due_date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$")
+    # Due date of the task, optional
+    due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
 
-    # Status of the task, must be a value defined in StatusEnum
-    status: StatusEnum
+    # Status of the task, optional
+    status: Optional[StatusEnum] = None
 
     # Optional priority for urgent tasks
     priority: Optional[PriorityEnum] = None
