@@ -1,12 +1,7 @@
 from typing import Optional
-from uuid import UUID,uuid4
 from pydantic import *
 import re
-
-from pydantic import BaseModel
-from pydantic import validator
 from Model.Enum.enums import *
-from datetime import date
 
 
 class TaskUpdate(BaseModel):
