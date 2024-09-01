@@ -14,7 +14,7 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
 
     # Due date of the task, optional
-    due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    due_date: Optional[str] = None
 
     # Status of the task, optional
     status: Optional[StatusEnum] = None
@@ -35,17 +35,27 @@ class TaskUpdate(BaseModel):
 
         # Check if the due_date matches the YYYY-MM-DD format
         if not re.match(r"^\d{4}-\d{2}-\d{2}$", v):
-           raise ValueError("due_date must be in the format YYYY-MM-DD")
+            raise ValueError("due_date must be in the format YYYY-MM-DD")
         
         # Split the due_date into year, month, and day
         year, month, day = map(int, v.split('-'))
         
-        # Validate month and day ranges
+        # Validate month range
         if not (1 <= month <= 12):
             raise ValueError('Month must be between 1 and 12')
         
-        # Validate day range; adjust day range validation as needed
-        if not (1 <= day <= 31):
+        # Validate day range according to the month and leap year consideration
+        if month in {4, 6, 9, 11} and day > 30:
+            raise ValueError(f'Month {month} has only 30 days')
+        elif month == 2:
+            # Check for leap year
+            if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+                if day > 29:
+                    raise ValueError(f'February in a leap year has only 29 days')
+            else:
+                if day > 28:
+                    raise ValueError(f'February has only 28 days')
+        elif not (1 <= day <= 31):
             raise ValueError('Day must be between 1 and 31')
-        
+
         return v

@@ -3,9 +3,9 @@ from Model.Enum.enums import PriorityEnum
 from Model.task import Task
 
 class UrgentTask(Task):
-    def __init__(self, task_id, title, description, due_date, status, priority: PriorityEnum):
+    def __init__(self, title, description, due_date, status, priority: PriorityEnum):
         # Initialize the parent Task class
-        super().__init__(task_id, title, description, due_date, status)
+        super().__init__(title, description, due_date, status)
         
         # Override or add the priority attribute
         self.priority = priority

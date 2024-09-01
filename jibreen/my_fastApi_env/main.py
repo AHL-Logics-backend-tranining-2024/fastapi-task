@@ -1,7 +1,7 @@
 
 from typing import Optional
 from uuid import *
-from fastapi import *
+from fastapi import * 
 from Model.Enum.enums import *
 from Model.task import Task
 from Model.task_create import TaskCreate
@@ -11,7 +11,7 @@ from utils.task_storage import *
 
 
 # Initialize the FastAPI application
-app = FastAPI()
+app = FastAPI() 
 
 # Define the endpoint for retrieving all tasks or filtering tasks by type
 @app.get("/tasks/", summary="Get all tasks", description="Retrieve a list of all tasks with their details. You can specify if the task is urgent or normal using a query parameter.")
@@ -31,7 +31,7 @@ def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Speci
     return tasks
 
 # Endpoint for retrieving uregent task
-@app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
+""" @app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
 def get_urgent_tasks():
     tasks = load_tasks()
     
@@ -41,13 +41,13 @@ def get_urgent_tasks():
     if not urgent_tasks:
         raise HTTPException(status_code=404, detail="No urgent tasks found")
     
-    return urgent_tasks
+    return urgent_tasks """
 
 
 # Endpoint for retrieving task by ID
 @app.get("/tasks/{task_id}/", summary="Get Task by ID", description="Retrieve the details of a task by its ID.")
 def get_task_by_id(
-    task_id: UUID = Path(..., description="The ID of the task to retrieve")
+    task_id: UUID = Path(..., description="The ID of the task to retrieve") 
 ):
     tasks = load_tasks()
     
@@ -61,26 +61,23 @@ def get_task_by_id(
 
 
 # Your create_task_or_urgent_task endpoint
-@app.post("/tasks/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
+@app.post("/task/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
 def create_task_or_urgent_task(  
-    task_create: TaskCreate,
-    priority: Optional[PriorityEnum] = Query(None, description="Specify the priority if the task is urgent")
+    task_create: TaskCreate
 ):
     tasks = load_tasks()
 
     # Determine if it's an urgent task or a normal task based on the presence of priority
-    if priority:
+    if task_create.priority:
         task = UrgentTask(
-            task_id=uuid4(),
             title=task_create.title,
             description=task_create.description,
             due_date=task_create.due_date,
             status=task_create.status,
-            priority=priority
+            priority=task_create.priority
         )
     else:
         task = Task(
-            task_id=uuid4(),
             title=task_create.title,
             description=task_create.description,
             due_date=task_create.due_date,
@@ -114,40 +111,37 @@ def delete_task_by_id(task_id: UUID = Path(..., description="The ID of the task 
 @app.put("/tasks/{task_id}", summary="Update a task", description="Update a task by its ID.")
 def update_task_by_id(
     *,
-    task_id: UUID = Path(..., description="The ID of the task to update"),
+    task_id: UUID = Path(..., description="The ID of the task to update"), 
     task_update: TaskUpdate
 ):
     tasks = load_tasks()
-
-    # Find the index of the task with the given task_id
-    task_index = next((index for (index, t) in enumerate(tasks) if t.get("task_id") == str(task_id)), None)
-
-    if task_index is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    # Retrieve the original task
-    original_task = tasks[task_index]
-
-    # Update the fields from TaskUpdate
-    updated_task = task_update.dict(exclude_unset=True)
-
-    # Ensure priority can only be edited for urgent tasks
-    if 'priority' in updated_task:
-        if 'priority' in original_task:
-            # Update the priority if it's different from the original
-            if updated_task["priority"] != original_task["priority"]:
-                original_task["priority"] = updated_task["priority"]
-        else:
-            raise HTTPException(status_code=400, detail="Cannot set priority for a non-urgent task")
+    task_id_str = str(task_id)
     
-    # Update other fields only if they differ from the original
-    for key, value in updated_task.items():
-        if key != "task_id" and original_task.get(key) != value:
-            original_task[key] = value
+    # Loop through the tasks and update the one with the matching ID
+    for task in tasks:
+        if task.get("task_id") == task_id_str:
+            # Update the fields from TaskUpdate
+            updated_task = task_update.dict(exclude_unset=True)
 
-    # Save the updated tasks list
-    tasks[task_index] = original_task
-    save_tasks(tasks)
+            # Ensure priority can only be edited for urgent tasks
+            if 'priority' in updated_task:
+                if 'priority' in task:
+                    # Update the priority if it's different from the original
+                    if updated_task["priority"] != task["priority"]:
+                        task["priority"] = updated_task["priority"]
+                else:
+                    raise HTTPException(status_code=400, detail="Cannot set priority for a non-urgent task")
 
-    return {"message": "Task updated successfully", "updated_task": original_task, "task_id": str(task_id)}
+            # Update other fields only if they differ from the original
+            for key, value in updated_task.items():
+                if key != "task_id" and task.get(key) != value:
+                    task[key] = value
+
+            # Save the updated tasks list
+            save_tasks(tasks)
+
+            return {"message": "Task updated successfully", "updated_task": task, "task_id": task_id_str}
+
+    # If no matching task was found
+    raise HTTPException(status_code=404, detail="Task not found")
 

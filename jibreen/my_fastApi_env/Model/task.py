@@ -1,13 +1,11 @@
 
-from typing import Optional
-from uuid import UUID,uuid4
-from pydantic import *
+import uuid
 from Model.Enum.enums import *
 
 
 class Task:
-    def __init__(self, task_id: UUID, title: str, description: str, due_date: str, status: str, priority: Optional[PriorityEnum] = None):
-        self.task_id = task_id
+    def __init__(self, title: str, description: str, due_date: str, status: str):
+        self.task_id = uuid.uuid4()  # Automatically generate the UUID
         self.title = title
         self.description = description
         self.due_date = due_date
