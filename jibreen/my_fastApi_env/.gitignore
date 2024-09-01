@@ -1,1 +1,6 @@
-my_fastApi_env/
+lib/
+lib64/
+bin/
+include/
+get-pip.py
+pyvenv.cfg
