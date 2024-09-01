@@ -1,6 +1,10 @@
 from typing import Optional
 from pydantic import * 
 import re
+
+from pydantic import BaseModel
+from pydantic import constr
+from pydantic import validator
 from Model.Enum.enums import *
 
 
