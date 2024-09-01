@@ -44,27 +44,6 @@ def create_task(task: Task):
         return {"message": "Normal task created", "task": task}
 
 
-from fastapi import Path
-
-#Update a Task by ID
-@app.put("/tasks/{task_id}/")
-def update_task(
-    task_id: UUID = Path(..., title="The ID of the task to update"),
-    updated_task: Task | None = None,
-):
-    #Determine the list to search based on the priority
-    task_list = urgent_tasks if updated_task and updated_task.priority is not None else tasks
-
-    #Search for the task in the determined list
-    for index, task in enumerate(task_list):
-        if task.task_id == task_id:
-            if updated_task:
-                task_list[index] = updated_task
-            return {"message": "Task updated", "task_id": task_id, "task": task_list[index]}
-
-    raise HTTPException(status_code=404, detail="Task not found")
-
-
 
 #Get All Tasks
 @app.get("/tasks/")
@@ -90,6 +69,27 @@ def get_task_by_id(task_id: UUID = Path(..., title="The ID of the task to get"))
         for task in task_list:
             if task.task_id == task_id:
                 return {"task": task}
+
+    raise HTTPException(status_code=404, detail="Task not found")
+
+
+
+
+#Update a Task by ID
+@app.put("/tasks/{task_id}/")
+def update_task(
+    task_id: UUID = Path(..., title="The ID of the task to update"),
+    updated_task: Task | None = None,
+):
+    #Determine the list to search based on the priority
+    task_list = urgent_tasks if updated_task and updated_task.priority is not None else tasks
+
+    #Search for the task in the determined list
+    for index, task in enumerate(task_list):
+        if task.task_id == task_id:
+            if updated_task:
+                task_list[index] = updated_task
+            return {"message": "Task updated", "task_id": task_id, "task": task_list[index]}
 
     raise HTTPException(status_code=404, detail="Task not found")
 
