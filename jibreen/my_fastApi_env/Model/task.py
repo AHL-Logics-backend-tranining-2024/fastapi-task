@@ -2,7 +2,6 @@
 from datetime import date
 import uuid
 from Model.Enum.enums import *
-from utils.date_validation import validate_due_date
 
 """ due_date: str """
 class Task:
