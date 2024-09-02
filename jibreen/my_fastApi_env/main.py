@@ -1,4 +1,5 @@
 
+from datetime import date
 from typing import Optional
 from uuid import *
 from fastapi import *
@@ -124,9 +125,9 @@ def update_task_by_id(
             # Update the fields from TaskUpdate
             updated_task = task_update.dict(exclude_unset=True)
 
-            # Validate due_date if provided in the update
-            if 'due_date' in updated_task:
-                updated_task['due_date'] = validate_due_date(updated_task['due_date'])
+            # Convert date fields to string format for serialization
+            if 'due_date' in updated_task and updated_task['due_date']:
+                updated_task['due_date'] = updated_task['due_date'].isoformat()
 
             # Ensure priority can only be edited for urgent tasks
             if 'priority' in updated_task:
@@ -141,6 +142,10 @@ def update_task_by_id(
             for key, value in updated_task.items():
                 if key != "task_id" and task.get(key) != value:
                     task[key] = value
+
+            # Convert date fields to string format in the updated task
+            if 'due_date' in task and isinstance(task['due_date'], date):
+                task['due_date'] = task['due_date'].isoformat()
 
             # Save the updated tasks list
             save_tasks(tasks)

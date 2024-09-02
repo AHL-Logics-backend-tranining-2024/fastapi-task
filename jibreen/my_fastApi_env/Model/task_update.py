@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from pydantic import *
 import re
@@ -12,7 +13,7 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
 
     # Due date of the task, optional
-    due_date: Optional[str] = None
+    due_date: Optional[date] = None
 
     # Status of the task, optional
     status: Optional[StatusEnum] = None

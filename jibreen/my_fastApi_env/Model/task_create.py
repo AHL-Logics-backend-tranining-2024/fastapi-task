@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from pydantic import * 
 import re
@@ -12,7 +13,7 @@ class TaskCreate(BaseModel):
     description: str = constr(min_length=5, max_length=100) 
 
     # Due date of the task, must be a string in the format YYYY-MM-DD
-    due_date: str
+    due_date: date
 
     # Status of the task, must be a value defined in StatusEnum
     status: StatusEnum
