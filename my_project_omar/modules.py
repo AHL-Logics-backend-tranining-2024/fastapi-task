@@ -21,8 +21,15 @@ class TaskBase(BaseModel):
 # In this case I use separate  class for achieving the singleton Design Pattern Each class have one responsibility
 class TaskCreate(TaskBase):
     pass
+
 class Task(TaskBase):
     task_id:UUID=uuid4()
-
+    def __init__(self, title: str, description: Optional[str], due_date: date, status: str, priority: Optional[Priority] = None, task_id: Optional[UUID] = None):
+        super().__init__(title=title, description=description, due_date=due_date, status=status, priority=priority)
+        self.task_id = task_id 
 class UrgentTask(TaskBase):
      priority: Priority
+     task_id:UUID=uuid4()
+     def __init__(self, title: str, description: Optional[str], due_date: date, status: str, priority: Priority, task_id: Optional[UUID] = None):
+        super().__init__(title=title, description=description, due_date=due_date, status=status, priority=priority)
+        self.task_id = task_id 

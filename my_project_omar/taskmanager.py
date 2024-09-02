@@ -5,13 +5,11 @@ from uuid import UUID, uuid4
 tasks_dict = {}
 class TaskManager:
     def create_task(self, task_data: TaskCreate) -> Task:
-# uuid give me a unique id for each task 
-        new_task_id = str(uuid4())
-        task_id=UUID(new_task_id),
-        title=task_data.title,
-        description=task_data.description,
-        due_date=task_data.due_date,
-        status=task_data.status,
+
+        title=task_data.title
+        description=task_data.description
+        due_date=task_data.due_date
+        status=task_data.status
           
         if task_data.priority:
             add_urgent=UrgentTask(task_data.priority,title,description,due_date,status)
@@ -32,7 +30,6 @@ class TaskManager:
             if task_data.priority:
                 updated_task = UrgentTask(
 # uuid give me a unique id for each task 
-                task_id=UUID(task_id),
                 title=task_data.title,
                 description=task_data.description,
                 due_date=task_data.due_date,
@@ -41,7 +38,6 @@ class TaskManager:
                 self.tasks_dict[task_id]=updated_task
             else:
                 updated_task = Task(
-                task_id=UUID(task_id),
                 title=task_data.title,
                 description=task_data.description,
                 due_date=task_data.due_date,
