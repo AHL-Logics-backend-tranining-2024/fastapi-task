@@ -24,4 +24,4 @@ class Task(TaskBase):
     task_id:UUID=uuid4()
 
 class UrgentTask(TaskBase):
-     priority: str
+     priority: Priority

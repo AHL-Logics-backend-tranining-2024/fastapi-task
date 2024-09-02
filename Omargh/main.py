@@ -9,8 +9,8 @@ app = FastAPI()
 task_manager = TaskManager()
 """ Creating a Task"""
 @app.post("/tasks/")
-async def create_task(task_data: TaskCreate, is_urgent: bool = False):
-    new_task = task_manager.create_task(task_data, is_urgent)
+async def create_task(task_data: TaskCreate):
+    new_task = task_manager.create_task(task_data)
     return new_task
 
 """ Update a Task by ID"""
@@ -22,17 +22,20 @@ def update_tasks(task_id: str , task_data: TaskCreate):
         return updated_task
     except ValueError as e:
         raise HTTPException(status_code=404, detail="No tasks")
+    
 """Get All Tasks"""
 @app.get("/tasks/")
 async def get_all_tasks():
-    return task_manager.view_tasks()
+    return task_manager.get_tasks()
+
 """Get Task by ID"""
 @app.get("/tasks/{task_id}")
 async def get_task(task_id: str):
-    task = task_manager.view_tasksbyid(task_id)
+    task = task_manager.get_tasksbyid(task_id)
     if task :
         return task
     raise HTTPException(status_code=404, detail="Task not found")
+
 """Get Urgent Tasks"""
     
 # delete using pop functionally
