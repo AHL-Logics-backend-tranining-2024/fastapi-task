@@ -16,19 +16,13 @@ app = FastAPI()
 
 # Define the endpoint for retrieving all tasks or filtering tasks by type
 @app.get("/tasks/", summary="Get all tasks", description="Retrieve a list of all tasks with their details. You can specify if the task is urgent or normal using a query parameter.")
-def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Specify if the task is urgent or normal")):
+def get_tasks():
     tasks = load_tasks()
-
-    if task_type:
-        if task_type == TaskTypeEnum.urgent:
-            # Filter tasks with a priority (urgent tasks)
-            filtered_tasks = [task for task in tasks if "priority" in task]
-        elif task_type == TaskTypeEnum.normal:
-            # Filter tasks without a priority (normal tasks)
-            filtered_tasks = [task for task in tasks if "priority" not in task]
-        return filtered_tasks
     
-    # Return all tasks if no type is specified
+    if not tasks:
+        # Return a message or an empty list if no tasks are found
+        return {"message": "No tasks found."}
+    
     return tasks
 
 # Endpoint for retrieving uregent task
