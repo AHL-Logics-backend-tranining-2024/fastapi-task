@@ -7,6 +7,7 @@ from Model.task import Task
 from Model.task_create import TaskCreate
 from Model.task_update import TaskUpdate
 from Model.urgentTask import UrgentTask
+from utils.handle_validate_date import validate_due_date
 from utils.task_storage import *
 
 
@@ -31,7 +32,7 @@ def get_tasks(task_type: Optional[TaskTypeEnum] = Query(None, description="Speci
     return tasks
 
 # Endpoint for retrieving uregent task
-""" @app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
+@app.get("/tasks/urgent/", summary="Get Urgent Tasks", description="Retrieve a list of all urgent tasks.")
 def get_urgent_tasks():
     tasks = load_tasks()
     
@@ -41,7 +42,7 @@ def get_urgent_tasks():
     if not urgent_tasks:
         raise HTTPException(status_code=404, detail="No urgent tasks found")
     
-    return urgent_tasks """
+    return urgent_tasks 
 
 
 # Endpoint for retrieving task by ID
@@ -61,7 +62,7 @@ def get_task_by_id(
 
 
 # Your create_task_or_urgent_task endpoint
-@app.post("/task/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
+@app.post("/tasks/", summary="Create a new task", description="Create a new task with details like title, description, due date, status, and priority.")
 def create_task_or_urgent_task(  
     task_create: TaskCreate
 ):
@@ -122,6 +123,10 @@ def update_task_by_id(
         if task.get("task_id") == task_id_str:
             # Update the fields from TaskUpdate
             updated_task = task_update.dict(exclude_unset=True)
+
+            # Validate due_date if provided in the update
+            if 'due_date' in updated_task:
+                updated_task['due_date'] = validate_due_date(updated_task['due_date'])
 
             # Ensure priority can only be edited for urgent tasks
             if 'priority' in updated_task:
