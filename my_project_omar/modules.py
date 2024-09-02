@@ -17,6 +17,7 @@ class TaskBase(BaseModel):
     description:str=Field(...,min_length=5,max_length=20)
     due_date: date
     status: str=Field(...,min_length=1,max_length=10)
+    priority: Optional[Priority] = None
 # In this case I use separate  class for achieving the singleton Design Pattern Each class have one responsibility
 class TaskCreate(TaskBase):
     pass
