@@ -28,20 +28,14 @@ def update_task(task_id: uuid.UUID, task_update: Update_Task_Basemodel):
         if not task_to_update:
             raise HTTPException(status_code=404, detail="Task not found")
         # Update the task attributes if they are provided
-        if task_update.title is not None:
-            task_to_update.title = task_update.title
-        if task_update.description is not None:
-            task_to_update.description = task_update.description
-        if task_update.due_date is not None:
-            task_to_update.due_date = task_update.due_date
-        if task_update.status is not None:
-            task_to_update.status = task_update.status
-        if task_update.priority is not None:
-            task_to_update.priority = task_update.priority
+        for field_name, field_value in task_update.__dict__.items():
+            if field_value is not None:
+               setattr(task_to_update, field_name, field_value)
 
         return {"message": "Task updated successfully", "task": task_to_update}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while updating the task :  {str(e)}")
+    
         
 # Retrieve a list of all tasks with their details.          
 @app.get("/tasks/")
@@ -69,6 +63,7 @@ def get_urgent_tasks():
             return {"message": "You don't have urgent tasks yet"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred while retrieving tasks: {str(e)}")
+    
 
 # Retrieve the details of a task by its ID.
 @app.get("/tasks/{task_id}")
