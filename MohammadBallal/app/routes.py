@@ -1,6 +1,7 @@
+from datetime import date
 from fastapi import APIRouter, HTTPException, Path
-from app.models import Task, UUID
-from typing import List
+from app.models import Priority, Status, Task, UUID
+from typing import List, Optional
 
 router = APIRouter()
 
@@ -45,19 +46,51 @@ def get_task_by_id(task_id: UUID = Path(..., title="The ID of the task to get"))
 @router.put("/tasks/{task_id}/")
 def update_task(
     task_id: UUID = Path(..., title="The ID of the task to update"),
-    updated_task: Task | None = None,
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+    due_date: Optional[date] = None,
+    status: Optional[Status] = None,
+    priority: Optional[Priority] = None,
 ):
-    # Determine the list to search based on the priority
-    task_list = urgent_tasks if updated_task and updated_task.priority is not None else tasks
-
-    # Search for the task in the determined list
-    for index, task in enumerate(task_list):
+    # Combine all tasks into one list
+    all_tasks = tasks + urgent_tasks
+    
+    # Search for the task by ID across all tasks
+    task_to_update = None
+    for task in all_tasks:
         if task.task_id == task_id:
-            if updated_task:
-                task_list[index] = updated_task
-            return {"message": "Task updated", "task_id": task_id, "task": task_list[index]}
+            task_to_update = task
+            break
 
-    raise HTTPException(status_code=404, detail="Task not found")
+    if not task_to_update:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    # Update only the fields that are provided in the request
+    if title is not None:
+        task_to_update.title = title
+    if description is not None:
+        task_to_update.description = description
+    if due_date is not None:
+        task_to_update.due_date = due_date
+    if status is not None:
+        task_to_update.status = status
+    if priority is not None:
+        # If the priority changes, move the task to the correct list
+        if task_to_update in tasks:
+            tasks.remove(task_to_update)
+        if task_to_update in urgent_tasks:
+            urgent_tasks.remove(task_to_update)
+        
+        task_to_update.priority = priority
+        # Add the task to the correct list based on its priority
+        if priority is not None:
+            urgent_tasks.append(task_to_update)
+        else:
+            tasks.append(task_to_update)
+
+    return {"message": "Task updated", "task": task_to_update}
+
+
 
 # Delete a Task by ID
 @router.delete("/tasks/{task_id}/")
