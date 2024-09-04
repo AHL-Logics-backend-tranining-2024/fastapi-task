@@ -5,7 +5,6 @@ from uuid import UUID, uuid4
 tasks_dict = {}
 class TaskManager:
     def create_task(self, task_data: TaskCreate) -> Task:
-
         title=task_data.title
         description=task_data.description
         due_date=task_data.due_date
@@ -43,12 +42,6 @@ class TaskManager:
                 due_date=task_data.due_date,
                 status=task_data.status)
                 self.tasks_dict[task_id]=updated_task
-
+    
     def delete_task(self, task_id: str) -> Optional[Task]:
-        return self.tasks_dict.pop(task_id)
-
-       
-                
-                
-                
-                
+        return self.tasks_dict.pop(task_id)     
