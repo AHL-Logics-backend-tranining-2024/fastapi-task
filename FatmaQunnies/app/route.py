@@ -61,7 +61,7 @@ def get_task_by_id(task_id: str):
 
 @app.get("/tasks/urgent/")
 def get_urgent_tasks():
-    urgent_tasks = [t for t in tasks.values() if t.get("priority") is not None]  
+    urgent_tasks = [{"id": task_id, "task": task} for task_id, task in tasks.items() if isinstance(task, urgent_task)]
     return urgent_tasks
 
 
