@@ -62,18 +62,10 @@ def update_task(
         urgent_tasks.remove(task_to_update)
 
     # Update task fields
-    if update_data.title is not None:
-        task_to_update.title = update_data.title
-    if update_data.description is not None:
-        task_to_update.description = update_data.description
-    if update_data.due_date is not None:
-        task_to_update.due_date = update_data.due_date
-    if update_data.status is not None:
-        task_to_update.status = update_data.status
-
-    # Update priority if provided
-    if update_data.priority is not None:
-        task_to_update.priority = update_data.priority
+    update_data_dict = update_data.model_dump()
+    for key, value in update_data_dict.items():
+        if value is not None:
+            setattr(task_to_update, key, value)
 
     # Add the task back to the correct list based on its updated priority
     if task_to_update.priority:
