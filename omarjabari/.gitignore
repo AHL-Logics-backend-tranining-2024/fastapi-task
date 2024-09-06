@@ -23,3 +23,6 @@ ENV.bak/
 *.dll
 *.so
 *.dylib
+
+my_project_env/
+

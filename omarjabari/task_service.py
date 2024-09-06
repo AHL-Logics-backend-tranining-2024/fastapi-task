@@ -3,7 +3,7 @@ from uuid import UUID
 from models import Task, UrgentTask
 
 
-class task_service:
+class TaskService:
     def __init__(self):
         self.tasks: Dict[UUID, Task] = {}
 
@@ -13,12 +13,17 @@ class task_service:
         self.tasks[task.task_id] = task
         return task
 
-    def update_task(self, task_id: UUID, updated_task: Task):
-        if task_id not in self.tasks:
-            raise ValueError("Task not found in tasks  !  ")
-        updated_task.task_id = task_id
-        self.tasks[task_id] = updated_task
-        return updated_task
+    def update_task(self, task_id: UUID, updated_task_data: Dict):
+        if task_id in self.tasks:
+            task = self.tasks[task_id]
+        else:
+            raise ValueError("Task not found")
+
+        for key, value in updated_task_data.items():
+            if hasattr(task, key) and value is not None:
+                setattr(task, key, value)
+        self.tasks[task_id] = task
+        return task
 
     def get_all_tasks(self):
         return list(self.tasks.values())

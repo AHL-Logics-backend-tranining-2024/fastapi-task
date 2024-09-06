@@ -1,6 +1,5 @@
 # FastAPI Task Management Application
 
-
 ## Features
 
 - **Create Task**: Allows users to create a new task with details such as title, description, due date, and status.
@@ -12,12 +11,9 @@
 
 ## API Endpoints
 
- 1. Create a Task
- 2. Update Task
- 3. Delete Task
- 4. Retrive List[Tasks]
- 5. Retrive Task by ID
- 6. Retrive urgent tasks 
-
- 
-
+1.  Create a Task
+2.  Update Task
+3.  Delete Task
+4.  Retrive List[Tasks]
+5.  Retrive Task by ID
+6.  Retrive urgent tasks
