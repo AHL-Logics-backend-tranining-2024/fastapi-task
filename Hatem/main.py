@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi import HTTPException
 from typing import List
 from fastapi import FastAPI
 from models import *
@@ -41,13 +41,18 @@ def create_task(task: Task):
     tasks.append(task)
     return JSONResponse(status_code=200, content={"detail": "Task added successfully"})
 
-@app.put("tasks")
-def update_task(updated_task: Task):
-    task_id = update_task.task_id
+@app.put("/tasks")
+def update_task(task: Task):
+    task_id = task.task_id
     exists = check_task_existence(task_id)
     if not exists:
         raise HTTPException(status_code=404, detail="Task not found")
-    tasks[task_id] = update_task
+    
+    for i in range(len(tasks)):
+        if tasks[i].task_id == task_id:
+            tasks[i] = task
+            break
+
     return JSONResponse(status_code=201, content={"detail": "Task updated successfully"})
 
 @app.delete("/tasks/{task_id}")
