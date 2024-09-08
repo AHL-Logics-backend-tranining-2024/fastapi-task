@@ -1,11 +1,12 @@
 from typing import Dict, Optional
-from modules import Task, UrgentTask, TaskCreate,UpdateDetails
+from modules import  UrgentTask, CreateTaskBase,UpdateDetails
 from uuid import UUID, uuid4
+from Tasks import Task
 
 tasks_dict = {}
 class TaskManager:
     
-    def create_task(self, task_data: TaskCreate) -> Task:
+    def create_task(self, task_data: CreateTaskBase) -> Task :
         title=task_data.title
         description=task_data.description
         due_date=task_data.due_date
