@@ -24,5 +24,8 @@ ENV.bak/
 *.so
 *.dylib
 
-my_project_env/
 
+my_project_env
+my_project_env/*
+my_project_env/
+my_project_env
