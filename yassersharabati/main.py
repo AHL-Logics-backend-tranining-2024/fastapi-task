@@ -19,10 +19,9 @@ def create_task(task: Task):
 def update_task(task_id: str, updated_task: Task):
     for task in tasks:
         if task.task_id == task_id:
-            task.title = updated_task.title
-            task.description = updated_task.description
-            task.due_date = updated_task.due_date
-            task.status = updated_task.status
+            updated_data = updated_task.model_dump(exclude_unset=True)
+            for key, value in updated_data.items():
+                setattr(task, key, value)
             return task
     raise HTTPException(status_code=404, detail="Task not found")
 
